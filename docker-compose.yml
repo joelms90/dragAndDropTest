@@ -56,6 +56,9 @@ services:
          context: ./dragAndDropUI # Specify the context directory containing your Vite project
          dockerfile: ../node/Dockerfile  # Use your existing Dockerfile for the Node.js service
       container_name: node_container
+      volumes:
+         - ./dragAndDropUI/src:/app/src
+         - ./dragAndDropUI/public:/app/public
       ports:
          - "3000:3000"
       networks:
