@@ -1,0 +1,19 @@
+# Ignore typical Node.js development and build artifacts
+node_modules
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Ignore development-specific directories
+.idea
+.vscode
+
+# Ignore Git-related files and directories
+.git
+.gitignore
+
+# Ignore test files and directories
+__tests__
+test
+tests
