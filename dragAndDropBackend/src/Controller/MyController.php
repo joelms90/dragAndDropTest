@@ -41,7 +41,7 @@ class MyController extends AbstractController
     public function shuffleCards(Request $request): JsonResponse
     {
         // Get the 'idValues' query parameter from the request
-        $idValues = explode(',', $request->query->get('idValues'));
+        $idValues = explode(',', $request->query->get('categoriesIds'));
         // Check if 'idValues' is an array and not empty
         if (!is_array($idValues) || empty($idValues)) {
             // Handle invalid input, return an error response or handle it as needed
