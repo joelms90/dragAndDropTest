@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Category;
 use App\Entity\Card;
@@ -21,7 +22,7 @@ class MyController extends AbstractController
     #[Route('/categories', name: 'shuffle_categories')]
     public function shuffLeCategories(): JsonResponse
     {
-        $categories = $this->entityManager->getRepository(Category::class)->findAll();
+        $categories = $this->entityManager->getRepository(Card::class)->findBy([], [], 3);
          // Randomize and Serialize the array of entities to JSON
         shuffle($categories);
         $jsonData = [];
@@ -37,13 +38,31 @@ class MyController extends AbstractController
     }
 
     #[Route('/cards', name: 'shuffle_cards')]
-    public function shuffleCards(): JsonResponse
+    public function shuffleCards(Request $request): JsonResponse
     {
-        $cards = $this->entityManager->getRepository(Card::class)->findAll();
-         // Randomize and Serialize the array of entities to JSON
+        // Get the 'idValues' query parameter from the request
+        $idValues = explode(',', $request->query->get('idValues'));
+        // Check if 'idValues' is an array and not empty
+        if (!is_array($idValues) || empty($idValues)) {
+            // Handle invalid input, return an error response or handle it as needed
+            return new JsonResponse(['error' => 'Invalid idValues parameter'], 400);
+        }
+
+        // Cast the ID values to integers for safety
+        $idValues = array_map('intval', $idValues);
+
+        // Define the criteria to filter by ID values
+        $criteria = ['category_id' => $idValues];
+
+        // Retrieve the records based on the criteria
+        $cards = $this->entityManager->getRepository(Card::class)->findBy($criteria);
+
+        // Randomize and Serialize the array of entities to JSON
         shuffle($cards);
+        // Limit the results to at most 5 cards
+        $limitedCards = array_slice($cards, 0, 5);
         $jsonData = [];
-        foreach ($cards as $card) {
+        foreach ($limitedCards as $card) {
             $jsonData[] = [
                 'id' => $card->getId(),
                 'text' => $card->getText(),
@@ -52,6 +71,6 @@ class MyController extends AbstractController
         }
 
         return new JsonResponse($jsonData, 200);
-
     }
+
 }
