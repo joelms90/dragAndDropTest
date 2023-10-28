@@ -33,12 +33,12 @@ const DragAndDropTest = () => {
 
     const [draggedItem, setDraggedItem] = useState(null);
 
-    const handleDragStart = (event:any, item:any) => {
+    const handleDragStart = (_event:any, item:any) => {
         if(showScore) return
         setDraggedItem(item);
     };
 
-    const handleDragOver = (event:any, target:any) => {
+    const handleDragOver = (event:any, _target:any) => {
         event.preventDefault();
     };
 
@@ -103,6 +103,8 @@ const DragAndDropTest = () => {
                 onDrop={(e) => handleDrop(e, 0)}
                 onDragOver={(e) => handleDragOver(e, 0)}
             >
+                {categoriesError}
+                {cardsError}
                 <div className="pb-4 flex flex-row justify-between">
                     <div className="p-2 text-3xl h-16 rounded-md w-40">
                     </div>
@@ -132,7 +134,7 @@ const DragAndDropTest = () => {
                 ))}
                 </div>
             </div>
-            <div className="min-h-[60vh] p-2 grid grid-cols-3 grid-flow-row gap-8">
+            <div className="min-h-[65vh] p-2 grid grid-cols-3 grid-flow-row gap-8">
                 {categories?.map(({id, text}) => (
                     <Category 
                         cards={cards ?? []}

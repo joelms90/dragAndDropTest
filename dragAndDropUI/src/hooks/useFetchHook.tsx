@@ -20,7 +20,7 @@ const useFetchHook = (apiUrl:string, hold = false) => {
         // Update the state with the fetched data
         setResponseData(data);
       })
-      .catch((error) => {
+      .catch((_error) => {
         setError('There was a problem with the fetch operation');
       });
   }, [apiUrl]); // The empty dependency array ensures the effect runs only once
