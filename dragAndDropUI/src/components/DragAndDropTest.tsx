@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Card from "./Card";
 import Category  from "./Category";
-import useFetchHook from "../hooks/useFetchHook";
+// import useFetchHook from "../hooks/useFetchHook";
 import React from "react";
 
 export type CategoryType = {
@@ -23,13 +23,45 @@ export type DragAndDropCard = {
 
 const DragAndDropTest = () => {
     const [showScore, setShowScore] = useState(false)
-    const [cards, setCards] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [categoriesIds, setCategoriesIds] = useState('0');
+    const [cards, setCards] = useState(
+    [
+        {
+            "id": 4,
+            "text": "Ardilla",
+            "categoryId": 1,
+            "target": 0
+        },
+        {
+            "id": 15,
+            "text": "Avestruz",
+            "categoryId": 3,
+            "target": 0
+        },
+        {
+            "id": 3,
+            "text": "Elefante",
+            "categoryId": 1,
+            "target": 0
+        },
+        {
+            "id": 19,
+            "text": "Flamingo",
+            "categoryId": 3,
+            "target": 0
+        },
+        {
+            "id": 10,
+            "text": "Salamandra",
+            "categoryId": 2,
+            "target": 0
+        }
+    ]);
+    const [categories, _setCategories] = useState([{"id":1,"text":"Mamíferos"},{"id":2,"text":"Reptil"},{"id":3,"text":"Ave"}]);
+    // const [categoriesIds, setCategoriesIds] = useState('0');
     
-    const {responseData: categoriesResponse , error: categoriesError} = useFetchHook('http://localhost:8080/categories')
+    // const {responseData: categoriesResponse , error: categoriesError} = useFetchHook('http://localhost:8080/categories')
 
-    const {responseData: cardsResponse , error: cardsError} = useFetchHook(`http://localhost:8080/cards?categoriesIds=${categoriesIds}`, categoriesIds === '0')
+    // const {responseData: cardsResponse , error: cardsError} = useFetchHook(`http://localhost:8080/cards?categoriesIds=${categoriesIds}`, categoriesIds === '0')
 
     const [draggedItem, setDraggedItem] = useState(null);
 
@@ -62,36 +94,36 @@ const DragAndDropTest = () => {
         console.log('drop')
     };
 
-    useEffect(() => {
-        if(categoriesResponse) {
-            const currentCategories= (categoriesResponse as any)?.map((e:CategoryType) => ({
-                ...e,
-                cards: []
-            })); 
-            setCategories(currentCategories);
-            const currentCategoriesIds = (categoriesResponse as any)?.map(((e:CategoryType) => e.id))?.join(','); 
-            setCategoriesIds(currentCategoriesIds);
-        }
-    }, [categoriesResponse])
+    // useEffect(() => {
+    //     if(categoriesResponse) {
+    //         const currentCategories= (categoriesResponse as any)?.map((e:CategoryType) => ({
+    //             ...e,
+    //             cards: []
+    //         })); 
+    //         setCategories(currentCategories);
+    //         const currentCategoriesIds = (categoriesResponse as any)?.map(((e:CategoryType) => e.id))?.join(','); 
+    //         setCategoriesIds(currentCategoriesIds);
+    //     }
+    // }, [categoriesResponse])
 
-    useEffect(() => {
-        if(cardsResponse) {
-            console.log({cardsResponse})
-            setCards((cardsResponse  as any).map((c:CardReponseType) => ({
-                id: c.id,
-                text: c.text,
-                categoryId: c.categoryId,
-                target: 0
-            })) ?? [2]);
-        }
-    }, [cardsResponse])
+    // useEffect(() => {
+    //     if(cardsResponse) {
+    //         console.log({cardsResponse})
+    //         setCards((cardsResponse  as any).map((c:CardReponseType) => ({
+    //             id: c.id,
+    //             text: c.text,
+    //             categoryId: c.categoryId,
+    //             target: 0
+    //         })) ?? [2]);
+    //     }
+    // }, [cardsResponse])
 
     const score = () => {
         const total = cards?.length;
         const correctAnswers = cards?.filter((c:any) => c.target.toString() == c.categoryId)?.length ?? 0;
 
         if(total > 0) {
-            return (correctAnswers/total);
+            return (correctAnswers/total)*10;
         }
 
         return 12;
@@ -103,14 +135,14 @@ const DragAndDropTest = () => {
                 onDrop={(e) => handleDrop(e, 0)}
                 onDragOver={(e) => handleDragOver(e, 0)}
             >
-                {categoriesError}
-                {cardsError}
+                {/* {categoriesError}
+                {cardsError} */}
                 <div className="pb-4 flex flex-row justify-between">
                     <div className="p-2 text-3xl h-16 rounded-md w-40">
                     </div>
-                    <p className="p-4 text-5xl font-bold text-center text-neutral-100 ">Animals</p>
+                    <p className="p-4 text-5xl font-bold text-center text-neutral-100 ">Clasifica los Animales</p>
                     <button disabled={cards?.filter((c:any) => c.target === 0)?.length > 0} onClick={() => setShowScore(true)}className="disabled:bg-neutral-500 disabled:opacity-70 text-2xl fp-2 h-16 w-40 bg-cyan-700 text-white hover:bg-cyan-900 border border-cyan-900 hover:border-transparent rounded">
-                        Finish
+                        Finalizar
                     </button>
                 </div>
                 <div className="grid grid-cols-3 grid-rows-2 gap-8">
@@ -120,7 +152,7 @@ const DragAndDropTest = () => {
 
                     <div className="col-span-6 row-span-2 w-full text-center text-6xl h-16 rounded-md"/>
                     <div className="col-span-6 row-span-2 w-full text-center text-neutral-700 text-6xl h-16 rounded-md">
-                        Score: <strong>{score()}</strong>
+                        Calificación: <strong>{score()}</strong>
                     </div>
                     </React.Fragment>
                 ) : cards?.filter((c:any) => c.target === 0)?.map(({id, text, categoryId}) => (
