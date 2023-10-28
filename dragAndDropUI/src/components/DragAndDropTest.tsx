@@ -51,10 +51,15 @@ const DragAndDropTest = () => {
         const draggedCard:any = newCards?.find((c:CardReponseType) => c.id === draggedItem);
         draggedCard.target = target;
 
+        const currentCategory:any =  categories?.find((c:CategoryType) => c.id === target);
+
         setCards(newCards)
+        //setCategories(updateCategories)
+        console.log(`Dropped ${draggedCard?.text} onto ${currentCategory?.text}`);
         }
 
         setDraggedItem(null);
+        console.log('drop')
     };
 
     useEffect(() => {
@@ -71,6 +76,7 @@ const DragAndDropTest = () => {
 
     useEffect(() => {
         if(cardsResponse) {
+            console.log({cardsResponse})
             setCards((cardsResponse  as any).map((c:CardReponseType) => ({
                 id: c.id,
                 text: c.text,
@@ -92,8 +98,8 @@ const DragAndDropTest = () => {
     }
 
     return (
-        <div className="p-12 h-screen bg-gradient-to-b from-cyan-500 to-cyan-300">
-            <div className="h-1/3"
+        <div className="p-12 bg-gradient-to-b from-cyan-500 to-cyan-300">
+            <div className="min-h-[35vh]"
                 onDrop={(e) => handleDrop(e, 0)}
                 onDragOver={(e) => handleDragOver(e, 0)}
             >
@@ -126,7 +132,7 @@ const DragAndDropTest = () => {
                 ))}
                 </div>
             </div>
-            <div className="p-2 h-2/3 grid grid-cols-3 grid-flow-row gap-8">
+            <div className="min-h-[60vh] p-2 grid grid-cols-3 grid-flow-row gap-8">
                 {categories?.map(({id, text}) => (
                     <Category 
                         cards={cards ?? []}
