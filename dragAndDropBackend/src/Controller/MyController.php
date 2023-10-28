@@ -22,7 +22,7 @@ class MyController extends AbstractController
     #[Route('/categories', name: 'shuffle_categories')]
     public function shuffLeCategories(): JsonResponse
     {
-        $categories = $this->entityManager->getRepository(Card::class)->findBy([], [], 3);
+        $categories = $this->entityManager->getRepository(Category::class)->findBy([], [], 3);
          // Randomize and Serialize the array of entities to JSON
         shuffle($categories);
         $jsonData = [];
